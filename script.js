@@ -85,9 +85,6 @@ function setupToolAnimations() {
 
 // 工具初始化
 function initializeTools() {
-    // 从本地存储恢复数据
-    restoreFromLocalStorage();
-    
     // 设置输入框自动调整高度
     setupAutoResize();
     
@@ -95,14 +92,10 @@ function initializeTools() {
     setupKeyboardShortcuts();
 }
 
-// 自动保存设置
+// 自动保存设置 - 已禁用
 function setupAutoSave() {
-    const inputs = document.querySelectorAll('textarea, input[type="text"]');
-    inputs.forEach(input => {
-        input.addEventListener('input', debounce(() => {
-            saveToLocalStorage();
-        }, 1000));
-    });
+    // 自动保存功能已禁用
+    console.log('自动保存功能已禁用');
 }
 
 // 防抖函数
@@ -216,9 +209,6 @@ function formatJSON() {
         
         showMessage('JSON格式化成功！', 'success');
         
-        // 保存到本地存储
-        saveToLocalStorage();
-        
     } catch (error) {
         showMessage(`JSON格式错误: ${error.message}`, 'error');
         output.value = '';
@@ -248,9 +238,6 @@ function minifyJSON() {
         
         showMessage('JSON压缩成功！', 'success');
         
-        // 保存到本地存储
-        saveToLocalStorage();
-        
     } catch (error) {
         showMessage(`JSON格式错误: ${error.message}`, 'error');
         output.value = '';
@@ -261,7 +248,6 @@ function clearJSON() {
     document.getElementById('json-input').value = '';
     document.getElementById('json-output').value = '';
     showMessage('JSON数据已清空', 'success');
-    saveToLocalStorage();
 }
 
 // ==================== Base64工具 ====================
@@ -285,9 +271,6 @@ function encodeBase64() {
         output.style.height = output.scrollHeight + 'px';
         
         showMessage('Base64编码成功！', 'success');
-        
-        // 保存到本地存储
-        saveToLocalStorage();
         
     } catch (error) {
         showMessage(`编码失败: ${error.message}`, 'error');
@@ -315,9 +298,6 @@ function decodeBase64() {
         
         showMessage('Base64解码成功！', 'success');
         
-        // 保存到本地存储
-        saveToLocalStorage();
-        
     } catch (error) {
         showMessage(`解码失败: ${error.message}`, 'error');
         output.value = '';
@@ -328,7 +308,6 @@ function clearBase64() {
     document.getElementById('base64-input').value = '';
     document.getElementById('base64-output').value = '';
     showMessage('Base64数据已清空', 'success');
-    saveToLocalStorage();
 }
 
 // ==================== 二维码生成器 ====================
@@ -364,9 +343,6 @@ function generateQR() {
                 // 显示下载按钮
                 document.querySelector('.btn-download').style.display = 'inline-flex';
                 showMessage('二维码生成成功！', 'success');
-                
-                // 保存到本地存储
-                saveToLocalStorage();
             }
         });
         
@@ -381,7 +357,6 @@ function clearQR() {
     document.querySelector('.btn-download').style.display = 'none';
     document.getElementById('qr-input').value = '';
     showMessage('二维码已清空', 'success');
-    saveToLocalStorage();
 }
 
 function downloadQR() {
@@ -519,17 +494,14 @@ window.addEventListener('error', function(e) {
     showMessage('发生了一个错误，请刷新页面重试', 'error');
 });
 
-// 页面可见性API
+// 页面可见性API - 已禁用自动保存
 document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        // 页面隐藏时保存数据
-        saveToLocalStorage();
-    }
+    // 自动保存功能已禁用
 });
 
-// 页面卸载前保存数据
+// 页面卸载前保存数据 - 已禁用
 window.addEventListener('beforeunload', function() {
-    saveToLocalStorage();
+    // 自动保存功能已禁用
 });
 
 // AdSense初始化
