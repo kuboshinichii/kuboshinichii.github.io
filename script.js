@@ -1,5 +1,5 @@
 // 全局变量
-let currentQRCode = null;
+
 
 // DOM加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 应用初始化
 function initializeApp() {
-    console.log('FreeTools.top 应用已启动');
+    console.log('shinichikubo.top 应用已启动');
     
     // 添加页面加载动画
     document.body.classList.add('loaded');
@@ -337,6 +337,7 @@ function generateQR() {
     const input = document.getElementById('qr-input').value.trim();
     const size = parseInt(document.getElementById('qr-size').value);
     const color = document.getElementById('qr-color').value;
+    const canvas = document.getElementById('qr-canvas');
     
     if (!input) {
         showMessage('请输入要生成二维码的文本或URL', 'error');
@@ -344,25 +345,30 @@ function generateQR() {
     }
     
     try {
-        // 创建二维码
-        const qr = new QRCode(document.getElementById('qr-canvas'), {
-            text: input,
+        // 清空之前的二维码
+        canvas.innerHTML = '';
+        
+        // 使用QRCode.toCanvas方法生成二维码
+        QRCode.toCanvas(canvas, input, {
             width: size,
-            height: size,
-            colorDark: color,
-            colorLight: '#FFFFFF',
-            correctLevel: QRCode.CorrectLevel.H
+            margin: 2,
+            color: {
+                dark: color,
+                light: '#FFFFFF'
+            },
+            errorCorrectionLevel: 'H'
+        }, function (error) {
+            if (error) {
+                showMessage(`二维码生成失败: ${error.message}`, 'error');
+            } else {
+                // 显示下载按钮
+                document.querySelector('.btn-download').style.display = 'inline-flex';
+                showMessage('二维码生成成功！', 'success');
+                
+                // 保存到本地存储
+                saveToLocalStorage();
+            }
         });
-        
-        currentQRCode = qr;
-        
-        // 显示下载按钮
-        document.querySelector('.btn-download').style.display = 'inline-flex';
-        
-        showMessage('二维码生成成功！', 'success');
-        
-        // 保存到本地存储
-        saveToLocalStorage();
         
     } catch (error) {
         showMessage(`二维码生成失败: ${error.message}`, 'error');
@@ -374,26 +380,23 @@ function clearQR() {
     canvas.innerHTML = '';
     document.querySelector('.btn-download').style.display = 'none';
     document.getElementById('qr-input').value = '';
-    currentQRCode = null;
     showMessage('二维码已清空', 'success');
     saveToLocalStorage();
 }
 
 function downloadQR() {
-    if (!currentQRCode) {
+    const canvas = document.querySelector('#qr-canvas canvas');
+    if (!canvas) {
         showMessage('请先生成二维码', 'error');
         return;
     }
     
     try {
-        const canvas = document.querySelector('#qr-canvas canvas');
-        if (canvas) {
-            const link = document.createElement('a');
-            link.download = 'qrcode.png';
-            link.href = canvas.toDataURL();
-            link.click();
-            showMessage('二维码下载成功！', 'success');
-        }
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        showMessage('二维码下载成功！', 'success');
     } catch (error) {
         showMessage(`下载失败: ${error.message}`, 'error');
     }
