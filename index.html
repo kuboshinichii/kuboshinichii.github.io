@@ -1,13 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>我的AdSense网站</title>
-    <style>
-      body { max-width: 800px; margin: auto; padding: 20px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeToolsGuide</title>
+  
+  <!-- AdSense Code -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792296870258119" crossorigin="anonymous"></script>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    nav {
+      background-color: #444;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+    }
+    nav a:hover {
+      background-color: #666;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    .tool-card {
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      flex: 1;
+    }
+    .tool-card h2 {
+      color: #333;
+    }
+    .tool-card p {
+      font-size: 1rem;
+      color: #555;
+    }
+    .tool-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .tool-list {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>欢迎访问！</h1>
-    <p>这是我的AdSense赚钱站点</p>
+  <header>
+    <h1>FreeTools.top</h1>
+  </header>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/privacy">Privacy Policy</a>
+  </nav>
+
+  <div class="container">
+    <h2>Our Free Tools</h2>
+    <div class="tool-list">
+      <div class="tool-card">
+        <h2>JSON Formatter</h2>
+        <p>Format and beautify your JSON data for better readability.</p>
+      </div>
+      <div class="tool-card">
+        <h2>Base64 Encoder</h2>
+        <p>Encode and decode Base64 data easily.</p>
+      </div>
+      <div class="tool-card">
+        <h2>QR Code Generator</h2>
+        <p>Generate QR codes for any URL or text.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AdSense Ad -->
+  <div class="adsense-container">
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-client="ca-pub-6792296870258119"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+  <footer>
+    本网站使用Google AdSense自动广告
+  </footer>
 </body>
 </html>
