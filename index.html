@@ -1,128 +1,229 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FreeToolsGuide</title>
-  
-  <!-- AdSense Code -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792296870258119" crossorigin="anonymous"></script>
-  
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    header {
-      background-color: #333;
-      color: white;
-      padding: 10px 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-    }
-    nav {
-      background-color: #444;
-      display: flex;
-      justify-content: center;
-      padding: 10px 0;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 10px 20px;
-    }
-    nav a:hover {
-      background-color: #666;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
-    .tool-card {
-      background-color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin: 20px;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      flex: 1;
-    }
-    .tool-card h2 {
-      color: #333;
-    }
-    .tool-card p {
-      font-size: 1rem;
-      color: #555;
-    }
-    .tool-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-    }
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #333;
-      color: white;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    }
-    @media (max-width: 768px) {
-      .tool-list {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeTools.top - 免费在线工具集合</title>
+    <meta name="description" content="免费在线工具集合，包括JSON格式化、Base64编码、二维码生成器等实用工具">
+    <meta name="keywords" content="免费工具,在线工具,JSON格式化,Base64编码,二维码生成器">
+    
+    <!-- AdSense Code -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792296870258119" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>FreeTools.top</h1>
-  </header>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-tools"></i>
+                <span>FreeTools.top</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#tools">工具</a>
+                <a href="privacy.html">隐私政策</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-  <nav>
-    <a href="/">Home</a>
-    <a href="/privacy">Privacy Policy</a>
-  </nav>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>免费在线工具集合</h1>
+            <p>为全球用户提供实用、高效的在线工具服务</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">3+</span>
+                    <span class="stat-label">实用工具</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">在线服务</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">免费使用</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <div class="container">
-    <h2>Our Free Tools</h2>
-    <div class="tool-list">
-      <div class="tool-card">
-        <h2>JSON Formatter</h2>
-        <p>Format and beautify your JSON data for better readability.</p>
-      </div>
-      <div class="tool-card">
-        <h2>Base64 Encoder</h2>
-        <p>Encode and decode Base64 data easily.</p>
-      </div>
-      <div class="tool-card">
-        <h2>QR Code Generator</h2>
-        <p>Generate QR codes for any URL or text.</p>
-      </div>
-    </div>
-  </div>
+    <!-- Tools Section -->
+    <section id="tools" class="tools-section">
+        <div class="container">
+            <h2>我们的工具</h2>
+            <div class="tools-grid">
+                <!-- JSON Formatter Tool -->
+                <div class="tool-card" id="json-formatter">
+                    <div class="tool-header">
+                        <i class="fas fa-code"></i>
+                        <h3>JSON格式化工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="json-input">输入JSON数据：</label>
+                            <textarea id="json-input" placeholder='{"name": "example", "value": 123}'></textarea>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="formatJSON()" class="btn btn-primary">
+                                <i class="fas fa-magic"></i> 格式化
+                            </button>
+                            <button onclick="minifyJSON()" class="btn btn-secondary">
+                                <i class="fas fa-compress"></i> 压缩
+                            </button>
+                            <button onclick="clearJSON()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="output-group">
+                            <label for="json-output">格式化结果：</label>
+                            <textarea id="json-output" readonly></textarea>
+                        </div>
+                        <div class="copy-group">
+                            <button onclick="copyToClipboard('json-output')" class="btn btn-copy">
+                                <i class="fas fa-copy"></i> 复制结果
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-  <!-- AdSense Ad -->
-  <div class="adsense-container">
-    <ins class="adsbygoogle"
-         style="display:block; text-align:center;"
-         data-ad-client="ca-pub-6792296870258119"
-         data-ad-slot="1234567890"
-         data-ad-format="auto"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
+                <!-- Base64 Tool -->
+                <div class="tool-card" id="base64-tool">
+                    <div class="tool-header">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h3>Base64编码/解码工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="base64-input">输入文本：</label>
+                            <textarea id="base64-input" placeholder="输入要编码或解码的文本"></textarea>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="encodeBase64()" class="btn btn-primary">
+                                <i class="fas fa-arrow-down"></i> 编码
+                            </button>
+                            <button onclick="decodeBase64()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-up"></i> 解码
+                            </button>
+                            <button onclick="clearBase64()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="output-group">
+                            <label for="base64-output">结果：</label>
+                            <textarea id="base64-output" readonly></textarea>
+                        </div>
+                        <div class="copy-group">
+                            <button onclick="copyToClipboard('base64-output')" class="btn btn-copy">
+                                <i class="fas fa-copy"></i> 复制结果
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-  <footer>
-    本网站使用Google AdSense自动广告
-  </footer>
+                <!-- QR Code Generator -->
+                <div class="tool-card" id="qr-generator">
+                    <div class="tool-header">
+                        <i class="fas fa-qrcode"></i>
+                        <h3>二维码生成器</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="qr-input">输入文本或URL：</label>
+                            <input type="text" id="qr-input" placeholder="https://example.com 或 任意文本">
+                        </div>
+                        <div class="qr-options">
+                            <div class="option-group">
+                                <label for="qr-size">尺寸：</label>
+                                <select id="qr-size">
+                                    <option value="128">128x128</option>
+                                    <option value="256" selected>256x256</option>
+                                    <option value="512">512x512</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label for="qr-color">颜色：</label>
+                                <input type="color" id="qr-color" value="#000000">
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="generateQR()" class="btn btn-primary">
+                                <i class="fas fa-qrcode"></i> 生成二维码
+                            </button>
+                            <button onclick="clearQR()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="qr-output">
+                            <div id="qr-canvas"></div>
+                            <button onclick="downloadQR()" class="btn btn-download" style="display: none;">
+                                <i class="fas fa-download"></i> 下载二维码
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AdSense Section -->
+    <section class="adsense-section">
+        <div class="container">
+            <div class="adsense-container">
+                <!-- AdSense广告位 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6792296870258119"
+                     data-ad-slot="1234567890"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>FreeTools.top</h4>
+                    <p>为全球用户提供免费、实用的在线工具服务</p>
+                </div>
+                <div class="footer-section">
+                    <h4>工具</h4>
+                    <ul>
+                        <li><a href="#json-formatter">JSON格式化</a></li>
+                        <li><a href="#base64-tool">Base64工具</a></li>
+                        <li><a href="#qr-generator">二维码生成器</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>法律</h4>
+                    <ul>
+                        <li><a href="privacy.html">隐私政策</a></li>
+                        <li><a href="#terms">使用条款</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FreeTools.top. 保留所有权利。</p>
+                <p>本网站使用Google AdSense自动广告</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
