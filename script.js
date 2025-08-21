@@ -21,6 +21,9 @@ function initializeApp() {
     
     // 设置自动保存功能
     setupAutoSave();
+    
+    // 初始化AdSense
+    initializeAdSense();
 }
 
 // 移动端导航设置
@@ -524,6 +527,56 @@ document.addEventListener('visibilitychange', function() {
 // 页面卸载前保存数据
 window.addEventListener('beforeunload', function() {
     saveToLocalStorage();
+});
+
+// AdSense初始化
+function initializeAdSense() {
+    // 等待页面完全加载后再初始化AdSense
+    if (document.readyState === 'complete') {
+        loadAdSense();
+    } else {
+        window.addEventListener('load', loadAdSense);
+    }
+}
+
+function loadAdSense() {
+    try {
+        // 检查AdSense容器是否可见
+        const adContainer = document.querySelector('.adsense-container');
+        if (adContainer && adContainer.offsetWidth > 0) {
+            // 只有当容器有宽度时才加载广告
+            if (window.adsbygoogle) {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                console.log('AdSense广告已加载');
+            } else {
+                console.warn('AdSense脚本未加载，等待重试...');
+                setTimeout(loadAdSense, 2000);
+            }
+        } else {
+            // 如果容器不可见，延迟加载
+            console.log('AdSense容器不可见，延迟加载...');
+            setTimeout(loadAdSense, 1000);
+        }
+    } catch (error) {
+        console.warn('AdSense加载失败:', error);
+        // 重试机制
+        setTimeout(loadAdSense, 3000);
+    }
+}
+
+// 监听窗口大小变化，重新加载AdSense
+let resizeTimeout;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+        const adContainer = document.querySelector('.adsense-container');
+        if (adContainer && adContainer.offsetWidth > 0) {
+            // 如果之前加载失败，重新尝试
+            if (!adContainer.querySelector('ins iframe')) {
+                loadAdSense();
+            }
+        }
+    }, 500);
 });
 
 // 导出函数供全局使用

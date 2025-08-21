@@ -1,4 +1,4 @@
-# FreeTools.top 项目完成检查清单
+# shinichikubo.top 项目完成检查清单
 
 ## ✅ 已完成的功能
 
@@ -210,4 +210,4 @@
 
 ---
 
-**🎉 恭喜！FreeTools.top 项目已经完成，可以立即部署使用！**
+**🎉 恭喜！shinichikubo.top 项目已经完成，可以立即部署使用！**

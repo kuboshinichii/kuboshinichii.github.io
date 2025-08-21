@@ -1,4 +1,4 @@
-# FreeTools.top 部署指南
+# shinichikubo.top 部署指南
 
 本指南将帮助您将FreeTools.top网站部署到各种平台。
 
@@ -122,15 +122,15 @@
 
 1. **创建配置文件**
    ```nginx
-   server {
-       listen 80;
-       server_name your-domain.com www.your-domain.com;
-       return 301 https://$server_name$request_uri;
-   }
+       server {
+        listen 80;
+        server_name shinichikubo.top www.shinichikubo.top;
+        return 301 https://$server_name$request_uri;
+    }
    
-   server {
-       listen 443 ssl http2;
-       server_name your-domain.com www.your-domain.com;
+       server {
+        listen 443 ssl http2;
+        server_name shinichikubo.top www.shinichikubo.top;
        
        root /var/www/html;
        index index.html;
@@ -183,7 +183,7 @@
 
 2. **获取证书**
    ```bash
-   sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+       sudo certbot --nginx -d shinichikubo.top -d www.shinichikubo.top
    ```
 
 3. **自动续期**
@@ -200,8 +200,8 @@
 1. **创建manifest.json**
    ```json
    {
-     "name": "FreeTools.top",
-     "short_name": "FreeTools",
+           "name": "shinichikubo.top",
+      "short_name": "FreeTools",
      "description": "免费在线工具集合",
      "start_url": "/",
      "display": "standalone",
@@ -234,18 +234,18 @@
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://your-domain.com/</loc>
-    <lastmod>2024-12-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/privacy.html</loc>
-    <lastmod>2024-12-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
+     <url>
+     <loc>https://shinichikubo.top/</loc>
+     <lastmod>2024-12-01</lastmod>
+     <changefreq>weekly</changefreq>
+     <priority>1.0</priority>
+   </url>
+   <url>
+     <loc>https://shinichikubo.top/privacy.html</loc>
+     <lastmod>2024-12-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.5</priority>
+   </url>
 </urlset>
 ```
 
@@ -254,7 +254,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://shinichikubo.top/sitemap.xml
 ```
 
 ### 3. 添加结构化数据
@@ -263,12 +263,12 @@ Sitemap: https://your-domain.com/sitemap.xml
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "FreeTools.top",
+  "name": "shinichikubo.top",
   "description": "免费在线工具集合",
-  "url": "https://your-domain.com",
+  "url": "https://shinichikubo.top",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://your-domain.com/search?q={search_term_string}",
+    "target": "https://shinichikubo.top/search?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }
@@ -362,7 +362,7 @@ jobs:
 1. 检查浏览器控制台错误信息
 2. 查看服务器错误日志
 3. 在GitHub Issues中提交问题
-4. 发送邮件到 support@freetools.top
+4. 发送邮件到 1172133118@qq.com
 
 ---
 

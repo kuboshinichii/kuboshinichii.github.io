@@ -1,4 +1,4 @@
-# FreeTools.top - 免费在线工具集合
+# shinichikubo.top - 免费在线工具集合
 
 一个现代化的单页网站，为全球用户提供实用、高效的在线工具服务。
 
@@ -184,7 +184,7 @@ FreeToolsGuide/
 
 - **问题报告** - 通过GitHub Issues提交
 - **功能建议** - 欢迎提出改进意见
-- **技术支持** - 邮件联系: support@freetools.top
+- **技术支持** - 邮件联系: 1172133118@qq.com
 
 ## 📄 许可证
 
@@ -198,6 +198,6 @@ FreeToolsGuide/
 
 ---
 
-**FreeTools.top** - 让在线工具使用更简单、更高效！
+**shinichikubo.top** - 让在线工具使用更简单、更高效！
 
 *最后更新: 2024年12月*

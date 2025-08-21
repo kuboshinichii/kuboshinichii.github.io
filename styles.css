@@ -386,12 +386,31 @@ body {
 .adsense-container {
     text-align: center;
     min-height: 100px;
+    min-width: 320px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--bg-secondary);
     border-radius: var(--border-radius);
     border: 2px dashed var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.adsense-container::before {
+    content: '广告位';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    z-index: 1;
+}
+
+.adsense-container ins {
+    z-index: 2;
+    position: relative;
 }
 
 /* Footer */
