@@ -57,15 +57,15 @@
     
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- 二维码库 - 多重保障方案 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <!-- 二维码库 - 中国大陆友好版本 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // 如果第一个CDN失败，尝试其他CDN
         if (typeof QRCode === 'undefined') {
             const fallbackScripts = [
-                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
-                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
-                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.js'
+                'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+                'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
             ];
             
             let scriptIndex = 0;
@@ -92,45 +92,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
-    <!-- 备用二维码库 -->
-    <script>
-        // 如果QRCode库加载失败，使用在线API生成二维码
-        if (typeof QRCode === 'undefined') {
-            console.log('QRCode库未加载，使用在线API备用方案');
-            window.QRCode = function(text, options) {
-                this.text = text;
-                this.options = options || {};
-            };
-            
-            QRCode.prototype.toCanvas = function(canvas, callback) {
-                const ctx = canvas.getContext('2d');
-                const size = this.options.width || 256;
-                const margin = this.options.margin || 2;
-                
-                // 设置画布大小
-                canvas.width = size;
-                canvas.height = size;
-                
-                // 填充背景
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(0, 0, size, size);
-                
-                // 使用在线API生成二维码
-                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size-2*margin}x${size-2*margin}&data=${encodeURIComponent(this.text)}&format=png`;
-                
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.onload = function() {
-                    ctx.drawImage(img, margin, margin);
-                    if (callback) callback(null);
-                };
-                img.onerror = function() {
-                    if (callback) callback(new Error('在线API生成失败'));
-                };
-                img.src = apiUrl;
-            };
-        }
-    </script>
 </head>
 <body>
     <!-- Navigation -->
@@ -521,6 +482,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=1.5"></script>
 </body>
 </html>

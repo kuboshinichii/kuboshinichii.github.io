@@ -450,69 +450,104 @@ function generateQR() {
     // 尝试使用QRCode库
     if (typeof QRCode !== 'undefined') {
         try {
-            // 使用QRCode.toCanvas方法生成二维码
-            QRCode.toCanvas(canvasElement, input, {
-                width: size,
-                margin: 2,
-                color: {
-                    dark: color,
-                    light: '#FFFFFF'
-                },
-                errorCorrectionLevel: 'H'
-            }, function (error) {
-                if (error) {
-                    console.error('QRCode生成错误:', error);
-                    // 如果QRCode库出错，使用备用方案
-                    generateQRWithFallback(canvasElement, input, size, color);
-                } else {
-                    // 显示下载按钮
-                    const downloadBtn = document.querySelector('.btn-download');
-                    if (downloadBtn) {
-                        downloadBtn.style.display = 'inline-flex';
+            // 检查是否是本地QRCode库（QRCodeLocal）
+            if (QRCode.prototype && QRCode.prototype.toCanvas) {
+                // 使用本地QRCode库
+                const qr = new QRCode(input, {
+                    width: size,
+                    margin: 0,
+                    color: {
+                        dark: color,
+                        light: '#FFFFFF'
                     }
-                    showMessage('二维码生成成功！', 'success');
-                }
-            });
+                });
+                
+                qr.toCanvas(canvasElement, function (error) {
+                    if (error) {
+                        console.error('本地QRCode生成错误:', error);
+                        generateQRFallback();
+                    } else {
+                        // 显示下载按钮
+                        const downloadBtn = document.querySelector('.btn-download');
+                        if (downloadBtn) {
+                            downloadBtn.style.display = 'inline-flex';
+                        }
+                        showMessage('二维码生成成功！', 'success');
+                    }
+                });
+            } else {
+                // 使用标准QRCode库 - 重新设计的方法
+                // 先创建一个临时的div来生成二维码
+                const tempDiv = document.createElement('div');
+                tempDiv.style.position = 'absolute';
+                tempDiv.style.left = '-9999px';
+                document.body.appendChild(tempDiv);
+                
+                const qr = new QRCode(tempDiv, {
+                    text: input,
+                    width: size,
+                    height: size,
+                    colorDark: color,
+                    colorLight: '#FFFFFF',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                
+                // 等待二维码生成完成
+                setTimeout(() => {
+                    const qrCanvas = tempDiv.querySelector('canvas');
+                    if (qrCanvas) {
+                        // 清空容器并设置样式
+                        canvas.innerHTML = '';
+                        canvas.style.display = 'flex';
+                        canvas.style.justifyContent = 'center';
+                        canvas.style.alignItems = 'center';
+                        canvas.style.minHeight = '200px';
+                        canvas.style.padding = '20px';
+                        
+                        // 创建新的canvas并复制内容
+                        const newCanvas = document.createElement('canvas');
+                        newCanvas.width = qrCanvas.width;
+                        newCanvas.height = qrCanvas.height;
+                        newCanvas.style.margin = '0';
+                        newCanvas.style.padding = '0';
+                        newCanvas.style.border = 'none';
+                        newCanvas.style.display = 'block';
+                        
+                        const ctx = newCanvas.getContext('2d');
+                        ctx.drawImage(qrCanvas, 0, 0);
+                        
+                        // 将新canvas添加到容器
+                        canvas.appendChild(newCanvas);
+                        
+                        // 移除临时div
+                        document.body.removeChild(tempDiv);
+                        
+                        // 显示下载按钮
+                        const downloadBtn = document.querySelector('.btn-download');
+                        if (downloadBtn) {
+                            downloadBtn.style.display = 'inline-flex';
+                        }
+                        showMessage('二维码生成成功！', 'success');
+                    } else {
+                        document.body.removeChild(tempDiv);
+                        generateQRFallback();
+                    }
+                }, 200);
+            }
         } catch (error) {
             console.error('QRCode异常:', error);
-            generateQRWithFallback(canvasElement, input, size, color);
+            generateQRFallback();
         }
     } else {
         // QRCode库未加载，使用备用方案
-        generateQRWithFallback(canvasElement, input, size, color);
+        generateQRFallback();
     }
 }
 
-// 使用备用方案生成二维码
+// 使用备用方案生成二维码（已废弃，直接使用generateQRFallback）
 function generateQRWithFallback(canvasElement, input, size, color) {
-    try {
-        // 使用在线API生成二维码
-        const qr = new QRCode(input, {
-            width: size,
-            margin: 2,
-            color: {
-                dark: color,
-                light: '#FFFFFF'
-            }
-        });
-        
-        qr.toCanvas(canvasElement, function(error) {
-            if (error) {
-                console.error('在线API生成错误:', error);
-                generateQRFallback();
-            } else {
-                // 显示下载按钮
-                const downloadBtn = document.querySelector('.btn-download');
-                if (downloadBtn) {
-                    downloadBtn.style.display = 'inline-flex';
-                }
-                showMessage('二维码生成成功（使用在线API）！', 'success');
-            }
-        });
-    } catch (error) {
-        console.error('备用方案异常:', error);
-        generateQRFallback();
-    }
+    console.log('使用备用方案生成二维码');
+    generateQRFallback();
 }
 
 // 备用二维码生成方案（如果QRCode库加载失败）

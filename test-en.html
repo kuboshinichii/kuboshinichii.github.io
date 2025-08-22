@@ -6,6 +6,7 @@
     <title>Tool Testing Page - shinichikubo.top</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="qrcode-local.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,7 +82,7 @@
     </style>
     
     <!-- QR Code Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
@@ -254,12 +255,12 @@
             const result = document.getElementById('library-result');
             result.innerHTML = '<div class="info">🔄 Trying to reload libraries...</div>';
             
-            // Try to reload QRCode library
-            const scripts = [
-                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
-                'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js',
-                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js'
-            ];
+                         // Try to reload QRCode library
+             const scripts = [
+                 'https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
+                 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+                 'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js'
+             ];
             
             let scriptIndex = 0;
             
@@ -318,14 +319,16 @@
                 
                                  // Try to use QRCode library
                  if (typeof QRCode !== 'undefined') {
-                     QRCode.toCanvas(canvas, input, {
+                     const qr = new QRCode(input, {
                          width: 200,
                          margin: 2,
                          color: {
                              dark: '#000000',
                              light: '#FFFFFF'
                          }
-                     }, function (error) {
+                     });
+                     
+                     qr.toCanvas(canvas, function (error) {
                          if (error) {
                              // If QRCode fails, try fallback solution
                              testQRCodeWithFallback(canvas, input, result, container);
