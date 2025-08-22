@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成Favicon - shinichikubo.top</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+        .favicon-container { margin: 20px auto; max-width: 600px; }
+        .favicon-preview { margin: 20px 0; padding: 20px; border: 2px solid #ccc; border-radius: 8px; }
+        .download-btn { 
+            padding: 10px 20px; 
+            background: #2563eb; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px;
+            margin: 10px;
+        }
+        .download-btn:hover { background: #1d4ed8; }
+        .instructions { text-align: left; margin: 20px 0; padding: 20px; background: #f5f5f5; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>shinichikubo.top Favicon 生成器</h1>
+    
+    <div class="favicon-container">
+        <div class="favicon-preview">
+            <h3>Favicon 预览</h3>
+            <canvas id="faviconCanvas" width="32" height="32" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+            <br>
+            <button class="download-btn" onclick="downloadFavicon()">下载 favicon.ico</button>
+            <button class="download-btn" onclick="downloadPNG()">下载 PNG 格式</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>使用说明：</h3>
+            <ol>
+                <li>点击"下载 favicon.ico"按钮下载图标文件</li>
+                <li>将下载的文件重命名为 <code>favicon.ico</code></li>
+                <li>将文件放在网站根目录（与 index.html 同级）</li>
+                <li>刷新页面即可看到网站图标</li>
+            </ol>
+            
+            <h3>或者手动创建：</h3>
+            <p>您也可以使用在线工具创建favicon：</p>
+            <ul>
+                <li><a href="https://favicon.io/" target="_blank">favicon.io</a> - 免费favicon生成器</li>
+                <li><a href="https://www.favicon-generator.org/" target="_blank">favicon-generator.org</a></li>
+                <li><a href="https://realfavicongenerator.net/" target="_blank">RealFaviconGenerator</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 生成favicon
+        function generateFavicon() {
+            const canvas = document.getElementById('faviconCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置背景色
+            ctx.fillStyle = '#2563eb';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // 绘制工具图标
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🔧', 16, 16);
+            
+            // 添加边框
+            ctx.strokeStyle = '#1d4ed8';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(0, 0, 32, 32);
+        }
+        
+        // 下载favicon.ico
+        function downloadFavicon() {
+            const canvas = document.getElementById('faviconCanvas');
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            
+            // 转换为blob并下载
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        }
+        
+        // 下载PNG格式
+        function downloadPNG() {
+            const canvas = document.getElementById('faviconCanvas');
+            const link = document.createElement('a');
+            link.download = 'favicon.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // 页面加载完成后生成favicon
+        document.addEventListener('DOMContentLoaded', generateFavicon);
+    </script>
+</body>
+</html>

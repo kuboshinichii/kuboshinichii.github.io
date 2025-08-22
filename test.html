@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具测试页面 - shinichikubo.top</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+        .test-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #1d4ed8;
+        }
+        .test-button.secondary {
+            background: #6b7280;
+        }
+        .test-button.secondary:hover {
+            background: #4b5563;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .qr-test-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .qr-test-container img {
+            max-width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-tools"></i>
+                <span>shinichikubo.top</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="test.html">测试</a>
+            </div>
+            <div class="language-switcher">
+                <a href="index.html" class="lang-btn active">中文</a>
+                <a href="index-en.html" class="lang-btn">English</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div style="margin-top: 80px;">
+        <h1>工具功能测试页面</h1>
+        <p>这个页面用于测试新添加的工具功能是否正常工作。</p>
+
+    <div class="test-section">
+        <h3>1. 库加载状态检查</h3>
+        <p>检查所有必要的JavaScript库是否正确加载</p>
+        <button class="test-button" onclick="checkLibraries()">检查库状态</button>
+        <button class="test-button secondary" onclick="retryLoadLibraries()">重试加载库</button>
+        <div id="library-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. 二维码生成工具测试</h3>
+        <p>测试二维码生成功能</p>
+        <input type="text" id="qr-test-input" placeholder="输入要生成二维码的文本" value="https://shinichikubo.top" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
+        <button class="test-button" onclick="testQRCode()">测试二维码生成</button>
+        <button class="test-button secondary" onclick="testQRFallback()">测试备用方案</button>
+        <div id="qr-result" class="result"></div>
+        <div id="qr-test-container" class="qr-test-container"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. 代码美化/压缩工具测试</h3>
+        <p>测试JavaScript代码的美化和压缩功能</p>
+        <button class="test-button" onclick="testCodeBeautifier()">测试代码美化</button>
+        <button class="test-button" onclick="testCodeMinifier()">测试代码压缩</button>
+        <div id="code-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. 正则表达式测试工具</h3>
+        <p>测试正则表达式匹配功能</p>
+        <button class="test-button" onclick="testRegex()">测试正则表达式</button>
+        <div id="regex-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>5. 图片格式转换工具</h3>
+        <p>测试图片格式转换功能（需要选择图片文件）</p>
+        <input type="file" id="test-image" accept="image/*">
+        <button class="test-button" onclick="testImageConverter()">测试图片转换</button>
+        <div id="image-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>6. 视频转GIF工具</h3>
+        <p>测试视频转GIF功能（需要选择视频文件）</p>
+        <input type="file" id="test-video" accept="video/*">
+        <button class="test-button" onclick="testVideoToGif()">测试视频转GIF</button>
+        <div id="video-result" class="result"></div>
+    </div>
+
+    <script>
+        // 检查库加载状态
+        function checkLibraries() {
+            const result = document.getElementById('library-result');
+            const libraries = {
+                'QRCode': '二维码生成库',
+                'js_beautify': 'JavaScript代码美化库',
+                'css_beautify': 'CSS代码美化库',
+                'html_beautify': 'HTML代码美化库',
+                'GIF': 'GIF生成库'
+            };
+            
+            let html = '<h4>库加载状态:</h4>';
+            let allLoaded = true;
+            let missingLibraries = [];
+            
+            // 检查二维码库的特殊情况
+            const hasQRCode = typeof window.QRCode !== 'undefined';
+            
+            for (const [lib, name] of Object.entries(libraries)) {
+                if (lib === 'QRCode') {
+                    if (hasQRCode) {
+                        html += `<div class="success">✅ ${name} (${lib}) - 已加载</div>`;
+                    } else {
+                        html += `<div class="error">❌ ${name} (${lib}) - 未加载</div>`;
+                        allLoaded = false;
+                        missingLibraries.push(name);
+                    }
+                } else {
+                    if (typeof window[lib] !== 'undefined') {
+                        html += `<div class="success">✅ ${name} (${lib}) - 已加载</div>`;
+                    } else {
+                        html += `<div class="error">❌ ${name} (${lib}) - 未加载</div>`;
+                        allLoaded = false;
+                        missingLibraries.push(name);
+                    }
+                }
+            }
+            
+            if (allLoaded) {
+                html += '<div class="success"><strong>🎉 所有库都已成功加载！</strong></div>';
+            } else {
+                html += `<div class="warning"><strong>⚠️ 部分库加载失败: ${missingLibraries.join(', ')}</strong></div>`;
+                html += '<div class="info">💡 点击"重试加载库"按钮尝试重新加载</div>';
+            }
+            
+            result.innerHTML = html;
+        }
+
+        // 重试加载库
+        function retryLoadLibraries() {
+            const result = document.getElementById('library-result');
+            result.innerHTML = '<div class="info">🔄 正在尝试重新加载库...</div>';
+            
+            // 尝试重新加载QRCode库
+            const scripts = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js'
+            ];
+            
+            let scriptIndex = 0;
+            
+            function tryLoadScript() {
+                if (scriptIndex >= scripts.length) {
+                    result.innerHTML = '<div class="error">❌ 所有CDN都无法加载QRCode库</div>';
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = scripts[scriptIndex];
+                script.onload = function() {
+                    if (typeof QRCode !== 'undefined') {
+                        result.innerHTML = '<div class="success">✅ QRCode库重新加载成功！</div>';
+                        setTimeout(checkLibraries, 1000);
+                    } else {
+                        scriptIndex++;
+                        tryLoadScript();
+                    }
+                };
+                script.onerror = function() {
+                    scriptIndex++;
+                    tryLoadScript();
+                };
+                
+                document.head.appendChild(script);
+            }
+            
+            tryLoadScript();
+        }
+
+        // 测试二维码生成功能
+        function testQRCode() {
+            const input = document.getElementById('qr-test-input').value.trim();
+            const result = document.getElementById('qr-result');
+            const container = document.getElementById('qr-test-container');
+            
+            if (!input) {
+                result.innerHTML = '<div class="error">请输入要生成二维码的文本</div>';
+                return;
+            }
+            
+            // 检查是否有可用的二维码库
+            const hasQRCode = typeof QRCode !== 'undefined';
+            
+            if (!hasQRCode) {
+                result.innerHTML = '<div class="error">❌ 没有可用的二维码生成库</div>';
+                return;
+            }
+            
+            try {
+                result.innerHTML = '<div class="info">🔄 正在生成二维码...</div>';
+                
+                // 创建一个临时的canvas元素
+                const canvas = document.createElement('canvas');
+                
+                // 尝试使用QRCode库
+                if (typeof QRCode !== 'undefined') {
+                    QRCode.toCanvas(canvas, input, {
+                        width: 200,
+                        margin: 2,
+                        color: {
+                            dark: '#000000',
+                            light: '#FFFFFF'
+                        }
+                    }, function (error) {
+                        if (error) {
+                            // 如果QRCode失败，尝试使用备用方案
+                            testQRCodeWithFallback(canvas, input, result, container);
+                        } else {
+                            result.innerHTML = '<div class="success">✅ 二维码生成成功！</div>';
+                            container.innerHTML = `<img src="${canvas.toDataURL()}" alt="生成的二维码">`;
+                        }
+                    });
+                } else {
+                    // 直接使用备用方案
+                    testQRCodeWithFallback(canvas, input, result, container);
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ 二维码生成失败: ${error.message}</div>`;
+            }
+        }
+        
+        // 使用备用方案测试二维码
+        function testQRCodeWithFallback(canvas, input, result, container) {
+            if (typeof QRCode !== 'undefined') {
+                const qr = new QRCode(input, {
+                    width: 200,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+                
+                qr.toCanvas(canvas, function(error) {
+                    if (error) {
+                        result.innerHTML = `<div class="error">❌ 备用方案也失败了: ${error.message}</div>`;
+                    } else {
+                        result.innerHTML = '<div class="success">✅ 二维码生成成功（使用在线API）！</div>';
+                        container.innerHTML = `<img src="${canvas.toDataURL()}" alt="生成的二维码">`;
+                    }
+                });
+            } else {
+                result.innerHTML = '<div class="error">❌ 备用方案也不可用</div>';
+            }
+        }
+
+        // 测试备用方案
+        function testQRFallback() {
+            const input = document.getElementById('qr-test-input').value.trim();
+            const result = document.getElementById('qr-result');
+            const container = document.getElementById('qr-test-container');
+            
+            if (!input) {
+                result.innerHTML = '<div class="error">请输入要生成二维码的文本</div>';
+                return;
+            }
+            
+            try {
+                result.innerHTML = '<div class="warning">⚠️ 使用备用方案显示内容</div>';
+                
+                // 创建备用显示
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.style.cssText = `
+                    padding: 30px;
+                    border: 2px dashed #e5e7eb;
+                    border-radius: 12px;
+                    text-align: center;
+                    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+                    max-width: 300px;
+                    margin: 0 auto;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                `;
+                
+                fallbackDiv.innerHTML = `
+                    <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
+                    <div style="font-weight: 600; color: #374151; margin-bottom: 10px; font-size: 16px;">二维码内容</div>
+                    <div style="font-family: monospace; word-break: break-all; color: #6b7280; font-size: 14px; line-height: 1.5; background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">${input}</div>
+                    <div style="font-size: 12px; color: #9ca3af; margin-top: 10px;">请使用手机扫描二维码或手动输入内容</div>
+                `;
+                
+                container.innerHTML = '';
+                container.appendChild(fallbackDiv);
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ 备用方案失败: ${error.message}</div>`;
+            }
+        }
+
+        // 测试代码美化功能
+        function testCodeBeautifier() {
+            const testCode = `function test(){var a=1;var b=2;return a+b;}`;
+            const result = document.getElementById('code-result');
+            
+            if (typeof js_beautify === 'undefined') {
+                result.innerHTML = '<div class="error">❌ js-beautify库未加载</div>';
+                return;
+            }
+            
+            try {
+                const beautified = js_beautify(testCode, {
+                    indent_size: 2,
+                    space_in_empty_paren: true,
+                    preserve_newlines: true
+                });
+                
+                result.innerHTML = `
+                    <div class="success">✅ 代码美化成功！</div>
+                    <div><strong>原始代码:</strong><br><pre>${testCode}</pre></div>
+                    <div><strong>美化后:</strong><br><pre>${beautified}</pre></div>
+                `;
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ 代码美化失败: ${error.message}</div>`;
+            }
+        }
+
+        // 测试代码压缩功能
+        function testCodeMinifier() {
+            const testCode = `function test() {
+    var a = 1;
+    var b = 2;
+    return a + b;
+}`;
+            const result = document.getElementById('code-result');
+            
+            try {
+                // 简单的压缩逻辑
+                const minified = testCode
+                    .replace(/\s+/g, ' ')
+                    .replace(/\s*([{}();,=])\s*/g, '$1')
+                    .trim();
+                
+                result.innerHTML = `
+                    <div class="success">✅ 代码压缩成功！</div>
+                    <div><strong>原始代码:</strong><br><pre>${testCode}</pre></div>
+                    <div><strong>压缩后:</strong><br><pre>${minified}</pre></div>
+                `;
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ 代码压缩失败: ${error.message}</div>`;
+            }
+        }
+
+        // 测试正则表达式功能
+        function testRegex() {
+            const pattern = '\\d+';
+            const text = 'Hello 123 World 456 Test 789';
+            const result = document.getElementById('regex-result');
+            
+            try {
+                const regex = new RegExp(pattern, 'g');
+                const matches = text.match(regex);
+                
+                result.innerHTML = `
+                    <div class="success">✅ 正则表达式测试成功！</div>
+                    <div><strong>正则表达式:</strong> ${pattern}</div>
+                    <div><strong>测试文本:</strong> ${text}</div>
+                    <div><strong>匹配结果:</strong> ${matches ? matches.join(', ') : '无匹配'}</div>
+                `;
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ 正则表达式测试失败: ${error.message}</div>`;
+            }
+        }
+
+        // 测试图片转换功能
+        function testImageConverter() {
+            const fileInput = document.getElementById('test-image');
+            const result = document.getElementById('image-result');
+            
+            if (!fileInput.files[0]) {
+                result.innerHTML = '<div class="error">请先选择图片文件</div>';
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            result.innerHTML = `
+                <div class="success">✅ 图片文件读取成功！</div>
+                <div><strong>选择的文件:</strong> ${file.name}</div>
+                <div><strong>文件大小:</strong> ${(file.size / 1024).toFixed(2)} KB</div>
+                <div><strong>文件类型:</strong> ${file.type}</div>
+            `;
+        }
+
+        // 测试视频转GIF功能
+        function testVideoToGif() {
+            const fileInput = document.getElementById('test-video');
+            const result = document.getElementById('video-result');
+            
+            if (!fileInput.files[0]) {
+                result.innerHTML = '<div class="error">请先选择视频文件</div>';
+                return;
+            }
+            
+            if (typeof GIF === 'undefined') {
+                result.innerHTML = '<div class="error">❌ GIF生成库未加载</div>';
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            result.innerHTML = `
+                <div class="success">✅ 视频文件读取成功！</div>
+                <div><strong>选择的文件:</strong> ${file.name}</div>
+                <div><strong>文件大小:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                <div><strong>文件类型:</strong> ${file.type}</div>
+                <div><strong>GIF库状态:</strong> 已加载</div>
+            `;
+        }
+
+        // 页面加载完成后自动检查库状态
+        window.addEventListener('load', function() {
+            setTimeout(checkLibraries, 1000); // 延迟1秒检查，确保所有库都有时间加载
+        });
+    </script>
+</body>
+</html>

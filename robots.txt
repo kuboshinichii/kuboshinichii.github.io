@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+# 允许搜索引擎索引所有页面
+Disallow: /test.html
+
+# 网站地图位置
 Sitemap: https://shinichikubo.top/sitemap.xml
+
+# 爬取延迟（秒）
+Crawl-delay: 1

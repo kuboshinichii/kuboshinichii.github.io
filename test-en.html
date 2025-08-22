@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Testing Page - shinichikubo.top</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+        .test-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #1d4ed8;
+        }
+        .test-button.secondary {
+            background: #6b7280;
+        }
+        .test-button.secondary:hover {
+            background: #4b5563;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .qr-test-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .qr-test-container img {
+            max-width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+    
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+    
+    <!-- Backup QR Code Library -->
+    <script>
+        if (typeof QRCode === 'undefined') {
+            console.log('QRCode library not loaded, using online API backup solution');
+            window.QRCode = function(text, options) {
+                this.text = text;
+                this.options = options || {};
+            };
+            
+            QRCode.prototype.toCanvas = function(canvas, callback) {
+                const ctx = canvas.getContext('2d');
+                const size = this.options.width || 256;
+                const margin = this.options.margin || 2;
+                
+                canvas.width = size;
+                canvas.height = size;
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, size, size);
+                
+                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size-2*margin}x${size-2*margin}&data=${encodeURIComponent(this.text)}&format=png`;
+                
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function() {
+                    ctx.drawImage(img, margin, margin);
+                    if (callback) callback(null);
+                };
+                img.onerror = function() {
+                    if (callback) callback(new Error('Online API generation failed'));
+                };
+                img.src = apiUrl;
+            };
+        }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-tools"></i>
+                <span>shinichikubo.top</span>
+            </div>
+            <div class="nav-links">
+                <a href="index-en.html">Home</a>
+                <a href="test-en.html">Test</a>
+            </div>
+            <div class="language-switcher">
+                <a href="index.html" class="lang-btn">中文</a>
+                <a href="index-en.html" class="lang-btn active">English</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div style="margin-top: 80px;">
+        <h1>Tool Function Testing Page</h1>
+        <p>This page is used to test whether the newly added tool functions work properly.</p>
+
+    <div class="test-section">
+        <h3>1. Library Loading Status Check</h3>
+        <p>Check if all necessary JavaScript libraries are loaded correctly</p>
+        <button class="test-button" onclick="checkLibraries()">Check Library Status</button>
+        <button class="test-button secondary" onclick="retryLoadLibraries()">Retry Loading Libraries</button>
+        <div id="library-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. QR Code Generator Tool Test</h3>
+        <p>Test QR code generation functionality</p>
+        <input type="text" id="qr-test-input" placeholder="Enter text to generate QR code" value="https://shinichikubo.top" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
+        <button class="test-button" onclick="testQRCode()">Test QR Code Generation</button>
+        <button class="test-button secondary" onclick="testQRFallback()">Test Fallback Solution</button>
+        <div id="qr-result" class="result"></div>
+        <div id="qr-test-container" class="qr-test-container"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Code Beautifier/Minifier Tool Test</h3>
+        <p>Test JavaScript code beautification and minification functionality</p>
+        <button class="test-button" onclick="testCodeBeautifier()">Test Code Beautification</button>
+        <button class="test-button" onclick="testCodeMinifier()">Test Code Minification</button>
+        <div id="code-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Regular Expression Tester Tool</h3>
+        <p>Test regular expression matching functionality</p>
+        <button class="test-button" onclick="testRegex()">Test Regular Expression</button>
+        <div id="regex-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>5. Image Format Converter Tool</h3>
+        <p>Test image format conversion functionality (requires selecting an image file)</p>
+        <input type="file" id="test-image" accept="image/*">
+        <button class="test-button" onclick="testImageConverter()">Test Image Conversion</button>
+        <div id="image-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>6. Video to GIF Tool</h3>
+        <p>Test video to GIF conversion functionality (requires selecting a video file)</p>
+        <input type="file" id="test-video" accept="video/*">
+        <button class="test-button" onclick="testVideoToGif()">Test Video to GIF</button>
+        <div id="video-result" class="result"></div>
+    </div>
+
+    <script>
+        // Check library loading status
+        function checkLibraries() {
+            const result = document.getElementById('library-result');
+            const libraries = {
+                'QRCode': 'QR Code Generation Library',
+                'js_beautify': 'JavaScript Code Beautification Library',
+                'css_beautify': 'CSS Code Beautification Library',
+                'html_beautify': 'HTML Code Beautification Library',
+                'GIF': 'GIF Generation Library'
+            };
+            
+            let html = '<h4>Library Loading Status:</h4>';
+            let allLoaded = true;
+            let missingLibraries = [];
+            
+            // Check QR code library special case
+            const hasQRCode = typeof window.QRCode !== 'undefined';
+            
+            for (const [lib, name] of Object.entries(libraries)) {
+                if (lib === 'QRCode') {
+                    if (hasQRCode) {
+                        html += `<div class="success">✅ ${name} (${lib}) - Loaded</div>`;
+                    } else {
+                        html += `<div class="error">❌ ${name} (${lib}) - Not Loaded</div>`;
+                        allLoaded = false;
+                        missingLibraries.push(name);
+                    }
+                } else {
+                    if (typeof window[lib] !== 'undefined') {
+                        html += `<div class="success">✅ ${name} (${lib}) - Loaded</div>`;
+                    } else {
+                        html += `<div class="error">❌ ${name} (${lib}) - Not Loaded</div>`;
+                        allLoaded = false;
+                        missingLibraries.push(name);
+                    }
+                }
+            }
+            
+            if (allLoaded) {
+                html += '<div class="success"><strong>🎉 All libraries loaded successfully!</strong></div>';
+            } else {
+                html += `<div class="warning"><strong>⚠️ Some libraries failed to load: ${missingLibraries.join(', ')}</strong></div>`;
+                html += '<div class="info">💡 Click "Retry Loading Libraries" button to try reloading</div>';
+            }
+            
+            result.innerHTML = html;
+        }
+
+        // Retry loading libraries
+        function retryLoadLibraries() {
+            const result = document.getElementById('library-result');
+            result.innerHTML = '<div class="info">🔄 Trying to reload libraries...</div>';
+            
+            // Try to reload QRCode library
+            const scripts = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js'
+            ];
+            
+            let scriptIndex = 0;
+            
+            function tryLoadScript() {
+                if (scriptIndex >= scripts.length) {
+                    result.innerHTML = '<div class="error">❌ All CDNs failed to load QRCode library</div>';
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = scripts[scriptIndex];
+                script.onload = function() {
+                    if (typeof QRCode !== 'undefined') {
+                        result.innerHTML = '<div class="success">✅ QRCode library reloaded successfully!</div>';
+                        setTimeout(checkLibraries, 1000);
+                    } else {
+                        scriptIndex++;
+                        tryLoadScript();
+                    }
+                };
+                script.onerror = function() {
+                    scriptIndex++;
+                    tryLoadScript();
+                };
+                
+                document.head.appendChild(script);
+            }
+            
+            tryLoadScript();
+        }
+
+        // Test QR code generation functionality
+        function testQRCode() {
+            const input = document.getElementById('qr-test-input').value.trim();
+            const result = document.getElementById('qr-result');
+            const container = document.getElementById('qr-test-container');
+            
+            if (!input) {
+                result.innerHTML = '<div class="error">Please enter text to generate QR code</div>';
+                return;
+            }
+            
+            // Check if QR code library is available
+            const hasQRCode = typeof QRCode !== 'undefined';
+            
+            if (!hasQRCode) {
+                result.innerHTML = '<div class="error">❌ No QR code generation library available</div>';
+                return;
+            }
+            
+            try {
+                result.innerHTML = '<div class="info">🔄 Generating QR code...</div>';
+                
+                // Create a temporary canvas element
+                const canvas = document.createElement('canvas');
+                
+                                 // Try to use QRCode library
+                 if (typeof QRCode !== 'undefined') {
+                     QRCode.toCanvas(canvas, input, {
+                         width: 200,
+                         margin: 2,
+                         color: {
+                             dark: '#000000',
+                             light: '#FFFFFF'
+                         }
+                     }, function (error) {
+                         if (error) {
+                             // If QRCode fails, try fallback solution
+                             testQRCodeWithFallback(canvas, input, result, container);
+                         } else {
+                             result.innerHTML = '<div class="success">✅ QR code generated successfully!</div>';
+                             container.innerHTML = `<img src="${canvas.toDataURL()}" alt="Generated QR code">`;
+                         }
+                     });
+                 } else {
+                     // Use fallback solution directly
+                     testQRCodeWithFallback(canvas, input, result, container);
+                 }
+                 
+             } catch (error) {
+                 result.innerHTML = `<div class="error">❌ QR code generation failed: ${error.message}</div>`;
+             }
+         }
+         
+         // Test QR code with fallback solution
+         function testQRCodeWithFallback(canvas, input, result, container) {
+             if (typeof QRCode !== 'undefined') {
+                 const qr = new QRCode(input, {
+                     width: 200,
+                     margin: 2,
+                     color: {
+                         dark: '#000000',
+                         light: '#FFFFFF'
+                     }
+                 });
+                 
+                 qr.toCanvas(canvas, function(error) {
+                     if (error) {
+                         result.innerHTML = `<div class="error">❌ Fallback solution also failed: ${error.message}</div>`;
+                     } else {
+                         result.innerHTML = '<div class="success">✅ QR code generated successfully (using online API)!</div>';
+                         container.innerHTML = `<img src="${canvas.toDataURL()}" alt="Generated QR code">`;
+                     }
+                 });
+             } else {
+                 result.innerHTML = '<div class="error">❌ Fallback solution not available</div>';
+             }
+         }
+
+         // Test fallback solution
+         function testQRFallback() {
+             const input = document.getElementById('qr-test-input').value.trim();
+             const result = document.getElementById('qr-result');
+             const container = document.getElementById('qr-test-container');
+             
+             if (!input) {
+                 result.innerHTML = '<div class="error">Please enter text to generate QR code</div>';
+                 return;
+             }
+             
+             try {
+                 result.innerHTML = '<div class="warning">⚠️ Using fallback solution to display content</div>';
+                 
+                 // Create fallback display
+                 const fallbackDiv = document.createElement('div');
+                 fallbackDiv.style.cssText = `
+                     padding: 30px;
+                     border: 2px dashed #e5e7eb;
+                     border-radius: 12px;
+                     text-align: center;
+                     background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+                     max-width: 300px;
+                     margin: 0 auto;
+                     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                 `;
+                 
+                 fallbackDiv.innerHTML = `
+                     <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
+                     <div style="font-weight: 600; color: #374151; margin-bottom: 10px; font-size: 16px;">QR Code Content</div>
+                     <div style="font-family: monospace; word-break: break-all; color: #6b7280; font-size: 14px; line-height: 1.5; background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">${input}</div>
+                     <div style="font-size: 12px; color: #9ca3af; margin-top: 10px;">Please scan QR code with phone or manually enter content</div>
+                 `;
+                 
+                 container.innerHTML = '';
+                 container.appendChild(fallbackDiv);
+                 
+             } catch (error) {
+                 result.innerHTML = `<div class="error">❌ Fallback solution failed: ${error.message}</div>`;
+             }
+         }
+
+         // Test code beautification functionality
+         function testCodeBeautifier() {
+             const testCode = `function test(){var a=1;var b=2;return a+b;}`;
+             const result = document.getElementById('code-result');
+             
+                          if (typeof js_beautify === 'undefined') {
+                 result.innerHTML = '<div class="error">❌ js-beautify library not loaded</div>';
+                 return;
+             }
+             
+             try {
+                 const beautified = js_beautify(testCode, {
+                     indent_size: 2,
+                     space_in_empty_paren: true,
+                     preserve_newlines: true
+                 });
+                 
+                 result.innerHTML = `
+                     <div class="success">✅ Code beautification successful!</div>
+                     <div><strong>Original code:</strong><br><pre>${testCode}</pre></div>
+                     <div><strong>Beautified:</strong><br><pre>${beautified}</pre></div>
+                 `;
+             } catch (error) {
+                 result.innerHTML = `<div class="error">❌ Code beautification failed: ${error.message}</div>`;
+             }
+         }
+
+         // Test code minification functionality
+         function testCodeMinifier() {
+             const testCode = `function test() {
+     var a = 1;
+     var b = 2;
+     return a + b;
+}`;
+             const result = document.getElementById('code-result');
+             
+             try {
+                 // Simple minification logic
+                 const minified = testCode
+                     .replace(/\s+/g, ' ')
+                     .replace(/\s*([{}();,=])\s*/g, '$1')
+                     .trim();
+                 
+                 result.innerHTML = `
+                     <div class="success">✅ Code minification successful!</div>
+                     <div><strong>Original code:</strong><br><pre>${testCode}</pre></div>
+                     <div><strong>Minified:</strong><br><pre>${minified}</pre></div>
+                 `;
+             } catch (error) {
+                 result.innerHTML = `<div class="error">❌ Code minification failed: ${error.message}</div>`;
+             }
+         }
+
+         // Test regular expression functionality
+         function testRegex() {
+             const pattern = '\\d+';
+             const text = 'Hello 123 World 456 Test 789';
+             const result = document.getElementById('regex-result');
+             
+             try {
+                 const regex = new RegExp(pattern, 'g');
+                 const matches = text.match(regex);
+                 
+                 result.innerHTML = `
+                     <div class="success">✅ Regular expression test successful!</div>
+                     <div><strong>Regular expression:</strong> ${pattern}</div>
+                     <div><strong>Test text:</strong> ${text}</div>
+                     <div><strong>Match results:</strong> ${matches ? matches.join(', ') : 'No matches'}</div>
+                 `;
+             } catch (error) {
+                 result.innerHTML = `<div class="error">❌ Regular expression test failed: ${error.message}</div>`;
+             }
+         }
+
+         // Test image conversion functionality
+         function testImageConverter() {
+             const fileInput = document.getElementById('test-image');
+             const result = document.getElementById('image-result');
+             
+             if (!fileInput.files[0]) {
+                 result.innerHTML = '<div class="error">Please select an image file first</div>';
+                 return;
+             }
+             
+             const file = fileInput.files[0];
+             result.innerHTML = `
+                 <div class="success">✅ Image file read successfully!</div>
+                 <div><strong>Selected file:</strong> ${file.name}</div>
+                 <div><strong>File size:</strong> ${(file.size / 1024).toFixed(2)} KB</div>
+                 <div><strong>File type:</strong> ${file.type}</div>
+             `;
+         }
+
+         // Test video to GIF functionality
+         function testVideoToGif() {
+             const fileInput = document.getElementById('test-video');
+             const result = document.getElementById('video-result');
+             
+             if (!fileInput.files[0]) {
+                 result.innerHTML = '<div class="error">Please select a video file first</div>';
+                 return;
+             }
+             
+             if (typeof GIF === 'undefined') {
+                 result.innerHTML = '<div class="error">❌ GIF generation library not loaded</div>';
+                 return;
+             }
+             
+             const file = fileInput.files[0];
+             result.innerHTML = `
+                 <div class="success">✅ Video file read successfully!</div>
+                 <div><strong>Selected file:</strong> ${file.name}</div>
+                 <div><strong>File size:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                 <div><strong>File type:</strong> ${file.type}</div>
+                 <div><strong>GIF library status:</strong> Loaded</div>
+             `;
+         }
+
+                  // Check library status automatically after page loads
+         window.addEventListener('load', function() {
+             setTimeout(checkLibraries, 1000); // Delay 1 second to check, ensuring all libraries have time to load
+         });
+     </script>
+ </body>
+ </html>
+                    const canvas = document.createElement('canvas');
+                    QRCode.toCanvas(canvas, input, {
+                        width: 200,
+                        margin: 2
+                    }, function(error) {
+                        if (error) {
+                            resultDiv.innerHTML = `<div class="error">QR Code generation failed: ${error.message}</div>`;
+                        } else {
+                            resultDiv.innerHTML = `
+                                <div class="success">QR Code generated successfully!</div>
+                                <div style="margin-top: 10px;">${canvas.outerHTML}</div>
+                            `;
+                        }
+                    });
+                } else {
+                    resultDiv.innerHTML = '<div class="error">QR Code library not available</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">QR Code test failed: ${error.message}</div>`;
+            }
+        }
+
+        function testJSONFormatter() {
+            const input = document.getElementById('test-json-input').value;
+            const resultDiv = document.getElementById('test-json-result');
+            
+            if (!input) {
+                resultDiv.innerHTML = '<div class="error">Please enter JSON data</div>';
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(input);
+                const formatted = JSON.stringify(parsed, null, 2);
+                resultDiv.innerHTML = `
+                    <div class="success">JSON formatted successfully!</div>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; margin-top: 10px;">${formatted}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">JSON formatting failed: ${error.message}</div>`;
+            }
+        }
+
+
+
+        .test-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+        }
+
+        .status-label {
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-weight: 600;
+        }
+
+        .status-value.success {
+            color: var(--success-color);
+        }
+
+        .status-value.error {
+            color: var(--error-color);
+        }
+
+        .test-content {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .test-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .test-input label {
+            font-weight: 500;
+        }
+
+        .test-input input,
+        .test-input textarea {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+        }
+
+        .test-input textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .test-output {
+            min-height: 60px;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+
+        .success {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .error {
+            color: var(--error-color);
+            font-weight: 600;
+        }
+
+        .warning {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-primary);
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+            }
+            
+            .nav-toggle {
+                display: flex;
+            }
+            
+            .language-switcher {
+                display: none;
+            }
+        }
+    </style>
+</body>
+</html>

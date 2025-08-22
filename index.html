@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费在线工具集合 - 二维码生成器、代码美化、格式转换 | shinichikubo.top</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="免费在线工具集合，包含二维码生成器、代码美化、JSON格式化、Base64编码、正则表达式测试、图片格式转换、视频转GIF等实用工具">
+    <meta name="keywords" content="二维码生成器,在线工具,代码美化,JSON格式化,Base64编码,正则表达式测试,图片转换,视频转GIF,免费工具">
+    <meta name="author" content="shinichikubo.top">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="免费在线工具集合 - 二维码生成器、代码美化、格式转换">
+    <meta property="og:description" content="提供多种实用的在线工具，包括二维码生成器、代码美化、格式转换等，完全免费使用">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shinichikubo.top">
+    <meta property="og:site_name" content="shinichikubo.top">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免费在线工具集合">
+    <meta name="twitter:description" content="二维码生成器、代码美化、格式转换等实用工具">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "在线工具集合",
+      "description": "提供二维码生成器、代码美化、JSON格式化、Base64编码、正则表达式测试、图片格式转换、视频转GIF等多种实用工具",
+      "url": "https://shinichikubo.top",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "二维码生成器",
+        "代码美化工具",
+        "JSON格式化",
+        "Base64编码解码",
+        "正则表达式测试",
+        "图片格式转换",
+        "视频转GIF"
+      ]
+    }
+    </script>
+    <meta name="description" content="免费在线工具集合，包括JSON格式化、Base64编码、二维码生成器等实用工具">
+    <meta name="keywords" content="免费工具,在线工具,JSON格式化,Base64编码,二维码生成器">
+    
+    <!-- AdSense Code -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792296870258119" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- 二维码库 - 多重保障方案 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script>
+        // 如果第一个CDN失败，尝试其他CDN
+        if (typeof QRCode === 'undefined') {
+            const fallbackScripts = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.js'
+            ];
+            
+            let scriptIndex = 0;
+            function loadNextScript() {
+                if (scriptIndex < fallbackScripts.length) {
+                    const script = document.createElement('script');
+                    script.src = fallbackScripts[scriptIndex];
+                    script.onload = function() {
+                        if (typeof QRCode !== 'undefined') {
+                            console.log('QRCode库加载成功');
+                        }
+                    };
+                    script.onerror = function() {
+                        scriptIndex++;
+                        loadNextScript();
+                    };
+                    document.head.appendChild(script);
+                }
+            }
+            loadNextScript();
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+    <!-- 备用二维码库 -->
+    <script>
+        // 如果QRCode库加载失败，使用在线API生成二维码
+        if (typeof QRCode === 'undefined') {
+            console.log('QRCode库未加载，使用在线API备用方案');
+            window.QRCode = function(text, options) {
+                this.text = text;
+                this.options = options || {};
+            };
+            
+            QRCode.prototype.toCanvas = function(canvas, callback) {
+                const ctx = canvas.getContext('2d');
+                const size = this.options.width || 256;
+                const margin = this.options.margin || 2;
+                
+                // 设置画布大小
+                canvas.width = size;
+                canvas.height = size;
+                
+                // 填充背景
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, size, size);
+                
+                // 使用在线API生成二维码
+                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size-2*margin}x${size-2*margin}&data=${encodeURIComponent(this.text)}&format=png`;
+                
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function() {
+                    ctx.drawImage(img, margin, margin);
+                    if (callback) callback(null);
+                };
+                img.onerror = function() {
+                    if (callback) callback(new Error('在线API生成失败'));
+                };
+                img.src = apiUrl;
+            };
+        }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-tools"></i>
+                <span>shinichikubo.top</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#tools">工具</a>
+                <a href="privacy.html">隐私政策</a>
+            </div>
+            <div class="language-switcher">
+                <a href="index.html" class="lang-btn active">中文</a>
+                <a href="index-en.html" class="lang-btn">English</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+                            <h1>shinichikubo.top</h1>
+                <p>为全球用户提供实用、高效的在线工具服务</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">7+</span>
+                    <span class="stat-label">实用工具</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">在线服务</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">免费使用</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="tools-section">
+        <div class="container">
+            <h2>我们的工具</h2>
+            <div class="tools-grid">
+                <!-- JSON Formatter Tool -->
+                <div class="tool-card" id="json-formatter">
+                    <div class="tool-header">
+                        <i class="fas fa-code"></i>
+                        <h3>JSON格式化工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="json-input">输入JSON数据：</label>
+                            <textarea id="json-input" placeholder='{"name": "example", "value": 123}'></textarea>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="formatJSON()" class="btn btn-primary">
+                                <i class="fas fa-magic"></i> 格式化
+                            </button>
+                            <button onclick="minifyJSON()" class="btn btn-secondary">
+                                <i class="fas fa-compress"></i> 压缩
+                            </button>
+                            <button onclick="clearJSON()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="output-group">
+                            <label for="json-output">格式化结果：</label>
+                            <textarea id="json-output" readonly></textarea>
+                        </div>
+                        <div class="copy-group">
+                            <button onclick="copyToClipboard('json-output')" class="btn btn-copy">
+                                <i class="fas fa-copy"></i> 复制结果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Base64 Tool -->
+                <div class="tool-card" id="base64-tool">
+                    <div class="tool-header">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h3>Base64编码/解码工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="base64-input">输入文本：</label>
+                            <textarea id="base64-input" placeholder="输入要编码或解码的文本"></textarea>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="encodeBase64()" class="btn btn-primary">
+                                <i class="fas fa-arrow-down"></i> 编码
+                            </button>
+                            <button onclick="decodeBase64()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-up"></i> 解码
+                            </button>
+                            <button onclick="clearBase64()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="output-group">
+                            <label for="base64-output">结果：</label>
+                            <textarea id="base64-output" readonly></textarea>
+                        </div>
+                        <div class="copy-group">
+                            <button onclick="copyToClipboard('base64-output')" class="btn btn-copy">
+                                <i class="fas fa-copy"></i> 复制结果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Code Generator -->
+                <div class="tool-card" id="qr-generator">
+                    <div class="tool-header">
+                        <i class="fas fa-qrcode"></i>
+                        <h3>二维码生成器</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="qr-input">输入文本或URL：</label>
+                            <input type="text" id="qr-input" placeholder="https://example.com 或 任意文本">
+                        </div>
+                        <div class="qr-options">
+                            <div class="option-group">
+                                <label for="qr-size">尺寸：</label>
+                                <select id="qr-size">
+                                    <option value="128">128x128</option>
+                                    <option value="256" selected>256x256</option>
+                                    <option value="512">512x512</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label for="qr-color">颜色：</label>
+                                <input type="color" id="qr-color" value="#000000">
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="generateQR()" class="btn btn-primary">
+                                <i class="fas fa-qrcode"></i> 生成二维码
+                            </button>
+                            <button onclick="clearQR()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="qr-output">
+                            <div id="qr-canvas"></div>
+                            <button onclick="downloadQR()" class="btn btn-download" style="display: none;">
+                                <i class="fas fa-download"></i> 下载二维码
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Beautifier Tool -->
+                <div class="tool-card" id="code-beautifier">
+                    <div class="tool-header">
+                        <i class="fas fa-code-branch"></i>
+                        <h3>代码美化/压缩工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="code-input">输入代码：</label>
+                            <textarea id="code-input" placeholder="输入要美化或压缩的代码"></textarea>
+                        </div>
+                        <div class="code-options">
+                            <div class="option-group">
+                                <label for="code-language">语言：</label>
+                                <select id="code-language">
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="css">CSS</option>
+                                    <option value="html">HTML</option>
+                                    <option value="json">JSON</option>
+                                    <option value="xml">XML</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="beautifyCode()" class="btn btn-primary">
+                                <i class="fas fa-magic"></i> 美化代码
+                            </button>
+                            <button onclick="minifyCode()" class="btn btn-secondary">
+                                <i class="fas fa-compress"></i> 压缩代码
+                            </button>
+                            <button onclick="clearCode()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="output-group">
+                            <label for="code-output">处理结果：</label>
+                            <textarea id="code-output" readonly></textarea>
+                        </div>
+                        <div class="copy-group">
+                            <button onclick="copyToClipboard('code-output')" class="btn btn-copy">
+                                <i class="fas fa-copy"></i> 复制结果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regex Tester Tool -->
+                <div class="tool-card" id="regex-tester">
+                    <div class="tool-header">
+                        <i class="fas fa-search"></i>
+                        <h3>正则表达式测试工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="regex-pattern">正则表达式：</label>
+                            <input type="text" id="regex-pattern" placeholder="/pattern/flags">
+                        </div>
+                        <div class="input-group">
+                            <label for="regex-text">测试文本：</label>
+                            <textarea id="regex-text" placeholder="输入要测试的文本"></textarea>
+                        </div>
+                        <div class="regex-options">
+                            <div class="option-group">
+                                <label>
+                                    <input type="checkbox" id="regex-global"> 全局匹配 (g)
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="regex-ignorecase"> 忽略大小写 (i)
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="regex-multiline"> 多行匹配 (m)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="testRegex()" class="btn btn-primary">
+                                <i class="fas fa-search"></i> 测试匹配
+                            </button>
+                            <button onclick="clearRegex()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="output-group">
+                            <label for="regex-output">匹配结果：</label>
+                            <textarea id="regex-output" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Converter Tool -->
+                <div class="tool-card" id="image-converter">
+                    <div class="tool-header">
+                        <i class="fas fa-images"></i>
+                        <h3>图片格式转换工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="image-input">选择图片：</label>
+                            <input type="file" id="image-input" accept="image/*">
+                        </div>
+                        <div class="image-options">
+                            <div class="option-group">
+                                <label for="image-format">目标格式：</label>
+                                <select id="image-format">
+                                    <option value="jpeg">JPEG</option>
+                                    <option value="png">PNG</option>
+                                    <option value="webp">WebP</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label for="image-quality">质量 (1-100)：</label>
+                                <input type="range" id="image-quality" min="1" max="100" value="80">
+                                <span id="quality-value">80</span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="convertImage()" class="btn btn-primary">
+                                <i class="fas fa-exchange-alt"></i> 转换格式
+                            </button>
+                            <button onclick="clearImage()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="image-output">
+                            <div id="image-preview"></div>
+                            <button onclick="downloadImage()" class="btn btn-download" style="display: none;">
+                                <i class="fas fa-download"></i> 下载图片
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video to GIF Tool -->
+                <div class="tool-card" id="video-gif">
+                    <div class="tool-header">
+                        <i class="fas fa-video"></i>
+                        <h3>视频转GIF工具</h3>
+                    </div>
+                    <div class="tool-content">
+                        <div class="input-group">
+                            <label for="video-input">选择视频：</label>
+                            <input type="file" id="video-input" accept="video/*">
+                        </div>
+                        <div class="video-options">
+                            <div class="option-group">
+                                <label for="gif-width">宽度 (px)：</label>
+                                <input type="number" id="gif-width" value="320" min="100" max="800">
+                            </div>
+                            <div class="option-group">
+                                <label for="gif-fps">帧率 (fps)：</label>
+                                <input type="number" id="gif-fps" value="10" min="1" max="30">
+                            </div>
+                            <div class="option-group">
+                                <label for="gif-duration">时长 (秒)：</label>
+                                <input type="number" id="gif-duration" value="5" min="1" max="30">
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button onclick="convertToGif()" class="btn btn-primary">
+                                <i class="fas fa-film"></i> 转换为GIF
+                            </button>
+                            <button onclick="clearVideo()" class="btn btn-outline">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="video-output">
+                            <div id="video-preview"></div>
+                            <button onclick="downloadGif()" class="btn btn-download" style="display: none;">
+                                <i class="fas fa-download"></i> 下载GIF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AdSense Section -->
+    <section class="adsense-section">
+        <div class="container">
+            <div class="adsense-container">
+                <!-- AdSense广告位 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6792296870258119"
+                     data-ad-slot="1234567890"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>shinichikubo.top</h4>
+                    <p>为全球用户提供免费、实用的在线工具服务</p>
+                </div>
+                <div class="footer-section">
+                    <h4>工具</h4>
+                    <ul>
+                        <li><a href="#json-formatter">JSON格式化</a></li>
+                        <li><a href="#base64-tool">Base64工具</a></li>
+                        <li><a href="#qr-generator">二维码生成器</a></li>
+                        <li><a href="#code-beautifier">代码美化/压缩</a></li>
+                        <li><a href="#regex-tester">正则表达式测试</a></li>
+                        <li><a href="#image-converter">图片格式转换</a></li>
+                        <li><a href="#video-gif">视频转GIF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>法律</h4>
+                    <ul>
+                        <li><a href="privacy.html">隐私政策</a></li>
+                        <li><a href="#terms">使用条款</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 shinichikubo.top. 保留所有权利。</p>
+                <p>本网站使用Google AdSense自动广告</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
